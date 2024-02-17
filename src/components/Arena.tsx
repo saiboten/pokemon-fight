@@ -87,7 +87,7 @@ export const Arena = ({ pokemen }: Props) => {
           ))}
         </ul>
       </div>
-      <div className="flex gap-4 flex-wrap basis-1/2 justify-center">
+      <div className="flex gap-1 flex-wrap basis-1/2 justify-center">
         {pokemen.map((el) => (
           <button key={el.id} onClick={() => handleAddPokemon(el)}>
             <Card pokemon={el} attack={handleAttackClick} />
