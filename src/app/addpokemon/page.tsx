@@ -48,9 +48,6 @@ export default function AddPokemonPage() {
 
   return (
     <div className="max-w-xl m-auto bg-neutral-100 border-4 rounded p-4">
-      <div className="border-4 rounded bg-white p-4 m-4 inline-block">
-        <Link href="/library">Se oversikt</Link>
-      </div>
       <h1 className="text-center p-2 m-2 text-2xl">Ny pokemon</h1>
 
       <form

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { LinkButton } from "@/components/LinkButton";
+import { Spacer } from "@/components/Spacer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="flex-col items-center justify-between p-8 mx-auto max-w-5xl">
+        <Spacer />
+        <div className="pl-2 pr-2">
+          <LinkButton href="/library">Se alle pokemon</LinkButton>
+          <LinkButton href="/addpokemon">Legg til pokemon</LinkButton>
+          <LinkButton href="/">Til kamparenaen</LinkButton>
+        </div>
+        <main className="flex-col items-center justify-between p-4 mx-auto max-w-5xl">
           {children}
         </main>
       </body>

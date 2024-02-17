@@ -1,11 +1,3 @@
-export interface Move {
-  name: string;
-  power: number;
-  successRate: number;
-}
+import { Move, Pokemon } from "@prisma/client";
 
-export interface Pokemon {
-  name: string;
-  health: number;
-  moves: Array<Move>;
-}
+export type PokemonWithMove = Pokemon & { moves: Move[] };

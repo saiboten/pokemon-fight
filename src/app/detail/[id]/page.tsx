@@ -1,8 +1,6 @@
 import { Card } from "@/components/Card";
 import { EditForm } from "@/components/EditForm";
-import { SubmitButton } from "@/components/SubmitButton";
 import { prisma } from "@/storage/prisma";
-import Link from "next/link";
 
 export default async function Detail({ params }: { params: { id: string } }) {
   async function getPokemon(id: number) {
@@ -46,18 +44,13 @@ export default async function Detail({ params }: { params: { id: string } }) {
 
   return (
     <div className="bg-neutral-100 border-4 rounded p-4">
-      <div className="border-4 rounded bg-white p-4 m-6 inline-block">
-        <Link href="/addpokemon">Legg til pokemon</Link>
-      </div>
-      <div className="border-4 rounded bg-white p-4 m-6 inline-block">
-        <Link href="/library">Se alle pokemon</Link>
-      </div>
       <h1 className="text-center p-2 m-2 text-2xl">Alle pokemon</h1>
       <EditForm editPokemon={editPokemon} pokemon={pokemon} />
       <Card
         key={pokemon.name}
         pokemon={{
-          health: pokemon.hp,
+          id: pokemon.id,
+          hp: pokemon.hp,
           moves: pokemon.moves ?? [],
           name: pokemon.name,
         }}
