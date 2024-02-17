@@ -17,9 +17,9 @@ export default async function Library() {
   const pokemen = await getPokemen();
 
   return (
-    <div className="bg-neutral-100 border-4 rounded p-4">
-      <h1 className="text-center p-2 m-2 text-2xl">Alle pokemon</h1>
-      <div className="flex gap-5 flex-wrap">
+    <div className="bg-neutral-100 border-4 rounded p-1">
+      <h1 className="text-center text-2xl p-2">Alle pokemon</h1>
+      <div className="flex gap-1 justify-center flex-wrap">
         {pokemen.map((pokemon) => {
           return (
             <Link key={pokemon.name} href={`/detail/${pokemon.id}`}>

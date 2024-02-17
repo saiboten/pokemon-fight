@@ -25,7 +25,7 @@ export default function RootLayout({
           <LinkButton href="/addpokemon">Legg til pokemon</LinkButton>
           <LinkButton href="/">Til kamparenaen</LinkButton>
         </div>
-        <main className="flex-col items-center justify-between p-4 mx-auto max-w-5xl">
+        <main className="flex-col items-center justify-between mx-auto max-w-5xl">
           {children}
         </main>
       </body>
