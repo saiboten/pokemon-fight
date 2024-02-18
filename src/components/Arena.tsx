@@ -35,7 +35,7 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
     }
   }
 
-  function handleAttackClick(pokemon: PokemonWithMoveAndImage, move: Move) {
+  function handleAttackClick(pokemon: PokemonWithMove, move: Move) {
     if (pokemon1 === undefined || pokemon2 === undefined) {
       throw new Error("Missing pokemon");
     }

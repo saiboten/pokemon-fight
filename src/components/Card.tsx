@@ -2,11 +2,15 @@
 import Image from "next/image";
 import { Button } from "./Button";
 import { Move } from "@prisma/client";
-import { PokemonWithMove, PokemonWithMoveAndImage } from "./types";
+import {
+  PokemonWithMove,
+  PokemonWithMoveAndImage,
+  pokemonHasImage,
+} from "./types";
 
 interface CardProps {
   pokemon?: PokemonWithMoveAndImage | PokemonWithMove;
-  attack?: (pokemon: PokemonWithMoveAndImage, move: Move) => void;
+  attack?: (pokemon: PokemonWithMove, move: Move) => void;
 }
 
 const EmptyMoveSkeleton = ({ active }: { active: boolean }) => {
@@ -27,8 +31,8 @@ const Moves = ({
   attack,
 }: {
   active: boolean;
-  pokemon: PokemonWithMoveAndImage;
-  attack?: (pok: PokemonWithMoveAndImage, move: Move) => void;
+  pokemon: PokemonWithMove;
+  attack?: (pokemon: PokemonWithMove, move: Move) => void;
 }) => {
   if (!active) return null;
   return (
@@ -66,12 +70,21 @@ export const Card = ({ pokemon, attack }: CardProps) => {
           </div>
         </div>
         <div className="border-2 mr-1 ml-1">
-          <Image
-            src={pokemon.image?.image ?? "/card-template.png"}
-            alt="Image"
-            width={280}
-            height={176}
-          ></Image>
+          {pokemonHasImage(pokemon) ? (
+            <Image
+              src={pokemon.image?.image ?? "/card-template.png"}
+              alt="Image"
+              width={280}
+              height={176}
+            ></Image>
+          ) : (
+            <Image
+              src={"/card-template.png"}
+              alt="Image"
+              width={280}
+              height={176}
+            ></Image>
+          )}
         </div>
         <div className="h-24 w-full flex justify-center flex-col text-sm p-2">
           <EmptyMoveSkeleton
