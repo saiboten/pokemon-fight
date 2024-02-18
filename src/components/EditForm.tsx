@@ -41,7 +41,7 @@ export const EditForm = ({
           onChange={(e) => setHp(Number(e.target.value))}
         />
       </div>
-      <SubmitButton text="Legg til" />
+      <SubmitButton>Legg til</SubmitButton>
       {/* <FeedbackComponent visible={!!feedback} text={feedback} /> */}
     </form>
   );

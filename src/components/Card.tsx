@@ -2,11 +2,11 @@
 import Image from "next/image";
 import { Button } from "./Button";
 import { Move } from "@prisma/client";
-import { PokemonWithMove } from "./types";
+import { PokemonWithMove, PokemonWithMoveAndImage } from "./types";
 
 interface CardProps {
-  pokemon?: PokemonWithMove;
-  attack?: (pokemon: PokemonWithMove, move: Move) => void;
+  pokemon?: PokemonWithMoveAndImage | PokemonWithMove;
+  attack?: (pokemon: PokemonWithMoveAndImage, move: Move) => void;
 }
 
 const EmptyMoveSkeleton = ({ active }: { active: boolean }) => {
@@ -27,8 +27,8 @@ const Moves = ({
   attack,
 }: {
   active: boolean;
-  pokemon: PokemonWithMove;
-  attack?: (pok: PokemonWithMove, move: Move) => void;
+  pokemon: PokemonWithMoveAndImage;
+  attack?: (pok: PokemonWithMoveAndImage, move: Move) => void;
 }) => {
   if (!active) return null;
   return (
@@ -67,7 +67,7 @@ export const Card = ({ pokemon, attack }: CardProps) => {
         </div>
         <div className="border-2 mr-1 ml-1">
           <Image
-            src="/card-template.png"
+            src={pokemon.image?.image ?? "/card-template.png"}
             alt="Image"
             width={280}
             height={176}

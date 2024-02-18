@@ -23,14 +23,7 @@ export default async function Library() {
         {pokemen.map((pokemon) => {
           return (
             <Link key={pokemon.name} href={`/detail/${pokemon.id}`}>
-              <Card
-                pokemon={{
-                  id: pokemon.id,
-                  hp: pokemon.hp,
-                  moves: pokemon.moves ?? [],
-                  name: pokemon.name,
-                }}
-              />
+              <Card pokemon={pokemon} />
             </Link>
           );
         })}

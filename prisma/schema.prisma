@@ -20,11 +20,19 @@ model Move {
   pokemonId   Int?
 }
 
+model PokemonImage {
+  id        Int     @id @default(autoincrement())
+  pokemonId Int     @unique
+  image     String
+  pokemon   Pokemon @relation(fields: [pokemonId], references: [id], onDelete: Cascade)
+}
+
 model Pokemon {
-  id    Int    @id @default(autoincrement())
+  id    Int           @id @default(autoincrement())
   name  String
   hp    Int
   moves Move[]
+  image PokemonImage?
 }
 
 model User {

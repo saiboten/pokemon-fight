@@ -1,6 +1,7 @@
 import { SubmitButton } from "@/components/SubmitButton";
 import { prisma } from "@/storage/prisma";
 import Link from "next/link";
+import sharp from "sharp";
 
 // const FeedbackComponent = ({
 //   visible,
@@ -18,15 +19,14 @@ export default function AddPokemonPage() {
   async function addPokey(formData: FormData) {
     "use server";
 
-    const { name, health, move } = {
+    const { name, health, move, image } = {
       name: formData.get("name"),
       health: formData.get("health"),
       move: formData.get("move"),
+      image: formData.get("image") as unknown as File,
     };
 
-    console.log("Adding pokemon", name, health);
-
-    await prisma.pokemon.create({
+    const res = await prisma.pokemon.create({
       data: {
         hp: Number(health?.toString()) ?? 0,
         name: name?.toString() ?? "unset",
@@ -42,8 +42,23 @@ export default function AddPokemonPage() {
       },
     });
 
-    // mutate data
-    // revalidate cache
+    if (image.size > 0) {
+      const bytes = await image.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const resizedImage = await sharp(buffer).resize(280, 176).toBuffer();
+
+      const resizedImageWithPrefix = `data:image/png;base64,${resizedImage.toString(
+        "base64"
+      )}`;
+
+      await prisma.pokemonImage.create({
+        data: {
+          image: resizedImageWithPrefix,
+          pokemonId: res.id,
+        },
+      });
+    }
   }
 
   return (
@@ -51,8 +66,8 @@ export default function AddPokemonPage() {
       <h1 className="text-center p-2 m-2 text-2xl">Ny pokemon</h1>
 
       <form
-        className="flex flex-col justify-start items-start"
         action={addPokey}
+        className="flex flex-col justify-start items-start"
       >
         <div className="mb-4 flex gap-4 w-full">
           <span className="basis-20">Navn: </span>
@@ -81,7 +96,8 @@ export default function AddPokemonPage() {
             name="move"
           />
         </div>
-        <SubmitButton text="Legg til" />
+        <input type="file" name="image" />
+        <SubmitButton>Legg til</SubmitButton>
         {/* <FeedbackComponent visible={!!feedback} text={feedback} /> */}
       </form>
     </div>

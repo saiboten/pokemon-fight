@@ -3,30 +3,39 @@
 import { useState } from "react";
 import { Card } from "./Card";
 import { Move } from "@prisma/client";
-import { PokemonWithMove } from "./types";
+import { PokemonWithMove, PokemonWithMoveAndImage } from "./types";
 import { Spacer } from "./Spacer";
 
 interface Props {
   pokemen: Array<PokemonWithMove>;
+  getPokemon: (id: number) => Promise<PokemonWithMoveAndImage | null>;
 }
 
-export const Arena = ({ pokemen }: Props) => {
+export const Arena = ({ pokemen, getPokemon }: Props) => {
   const [log, setLog] = useState<Array<string>>([]);
 
-  const [pokemon1, setPokemon1] = useState<PokemonWithMove | undefined>();
-  const [pokemon2, setPokemon2] = useState<PokemonWithMove | undefined>();
+  const [pokemon1, setPokemon1] = useState<
+    PokemonWithMoveAndImage | undefined
+  >();
+  const [pokemon2, setPokemon2] = useState<
+    PokemonWithMoveAndImage | undefined
+  >();
 
   const [gameOver, setGameOver] = useState(false);
 
-  function handleAddPokemon(pokemon: PokemonWithMove) {
+  async function handleAddPokemon(pokemon: PokemonWithMove) {
+    const pokemonDetails = await getPokemon(pokemon.id);
+    if (pokemonDetails == null) {
+      throw new Error("Pokemon not found");
+    }
     if (pokemon1 === undefined) {
-      setPokemon1(pokemon);
+      setPokemon1(pokemonDetails);
     } else {
-      setPokemon2(pokemon);
+      setPokemon2(pokemonDetails);
     }
   }
 
-  function handleAttackClick(pokemon: PokemonWithMove, move: Move) {
+  function handleAttackClick(pokemon: PokemonWithMoveAndImage, move: Move) {
     if (pokemon1 === undefined || pokemon2 === undefined) {
       throw new Error("Missing pokemon");
     }
@@ -88,11 +97,13 @@ export const Arena = ({ pokemen }: Props) => {
         </ul>
       </div>
       <div className="flex gap-1 flex-wrap basis-1/2 justify-center">
-        {pokemen.map((el) => (
-          <button key={el.id} onClick={() => handleAddPokemon(el)}>
-            <Card pokemon={el} attack={handleAttackClick} />
-          </button>
-        ))}
+        {pokemen.map((el) => {
+          return (
+            <button key={el.id} onClick={() => handleAddPokemon(el)}>
+              <Card pokemon={el} attack={handleAttackClick} />
+            </button>
+          );
+        })}
       </div>
     </div>
   );

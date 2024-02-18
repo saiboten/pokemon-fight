@@ -2,7 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 
-export function SubmitButton({ text }: { text: string }) {
+export function SubmitButton({ children }: { children: string }) {
   const { pending } = useFormStatus();
 
   return (
@@ -11,7 +11,7 @@ export function SubmitButton({ text }: { text: string }) {
       type="submit"
       aria-disabled={pending}
     >
-      {text}
+      {children}
     </button>
   );
 }
