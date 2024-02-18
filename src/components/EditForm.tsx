@@ -20,9 +20,9 @@ export const EditForm = ({
       action={editPokemon}
     >
       <div className="mb-4 flex gap-4 w-full">
-        <span className="basis-20">Navn: </span>
+        <span className="basis-20 p-1">Navn: </span>
         <input
-          className="w-full"
+          className="w-full p-1"
           type="text"
           autoComplete="off"
           name="name"
@@ -31,9 +31,9 @@ export const EditForm = ({
         />
       </div>
       <div className="mb-4 flex gap-4 w-full">
-        <span className="basis-20">Helse: </span>
+        <span className="basis-20 p-1">Helse: </span>
         <input
-          className="w-full"
+          className="w-full p-1"
           type="text"
           autoComplete="off"
           name="health"
@@ -41,7 +41,7 @@ export const EditForm = ({
           onChange={(e) => setHp(Number(e.target.value))}
         />
       </div>
-      <SubmitButton>Legg til</SubmitButton>
+      <SubmitButton>Lagre endringer</SubmitButton>
       {/* <FeedbackComponent visible={!!feedback} text={feedback} /> */}
     </form>
   );

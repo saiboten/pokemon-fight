@@ -59,7 +59,7 @@ export const Card = ({ pokemon, attack }: CardProps) => {
   }
 
   return (
-    <div className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block">
+    <div className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block ">
       <div className="bg-white h-60">
         <div className="flex justify-between text-[10px] pr-1 pl-1">
           <div>{pokemon.name}</div>
@@ -86,7 +86,7 @@ export const Card = ({ pokemon, attack }: CardProps) => {
             ></Image>
           )}
         </div>
-        <div className="h-24 w-full flex justify-center flex-col text-sm p-2">
+        <div className="h-20 w-full flex justify-center flex-col text-sm p-2">
           <EmptyMoveSkeleton
             active={pokemon.moves === undefined || pokemon.moves.length === 0}
           />

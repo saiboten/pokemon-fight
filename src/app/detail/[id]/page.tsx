@@ -1,12 +1,27 @@
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { EditForm } from "@/components/EditForm";
 import { Spacer } from "@/components/Spacer";
 import { SubmitButton } from "@/components/SubmitButton";
 import { prisma } from "@/storage/prisma";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 import sharp from "sharp";
 
 export default async function Detail({ params }: { params: { id: string } }) {
+  async function deletePokemon() {
+    "use server";
+    if (!params.id) {
+      throw new Error("Missing params");
+    }
+
+    await prisma.pokemon.delete({
+      where: {
+        id: Number(params.id),
+      },
+    });
+    redirect("/library");
+  }
+
   async function updateImage(formData: FormData) {
     "use server";
     const { image } = {
@@ -84,7 +99,6 @@ export default async function Detail({ params }: { params: { id: string } }) {
   }
 
   const pokemon = await getPokemon(Number(params.id));
-
   if (!pokemon) {
     return null;
   }
@@ -102,7 +116,11 @@ export default async function Detail({ params }: { params: { id: string } }) {
           <form action={updateImage}>
             <h2>Oppdater bilde</h2>
             <input type="file" name="image" />
-            <SubmitButton>Lagre</SubmitButton>
+            <SubmitButton>Lagre bilde</SubmitButton>
+          </form>
+          <Spacer />
+          <form action={deletePokemon}>
+            <Button type="submit">Slett</Button>
           </form>
         </div>
       </div>
