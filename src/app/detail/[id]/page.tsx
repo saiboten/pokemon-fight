@@ -82,9 +82,11 @@ export default async function Detail({ params }: { params: { id: string } }) {
     "use server";
     console.log("storing");
 
-    const { name, health } = {
+    const { name, health, move, moveId } = {
       name: formData.get("name"),
       health: formData.get("health"),
+      move: formData.get("move"),
+      moveId: formData.get("moveId"),
     };
 
     await prisma.pokemon.update({
@@ -96,6 +98,23 @@ export default async function Detail({ params }: { params: { id: string } }) {
         id: Number(params.id),
       },
     });
+
+    if (move) {
+      await prisma.move.upsert({
+        create: {
+          successRate: 1,
+          name: "Angrep",
+          power: Number(move),
+        },
+        update: {
+          power: Number(move),
+        },
+        where: {
+          pokemonId: Number(params.id),
+          id: Number(moveId),
+        },
+      });
+    }
   }
 
   const pokemon = await getPokemon(Number(params.id));
