@@ -13,6 +13,9 @@ interface Props {
 
 export const Arena = ({ pokemen, getPokemon }: Props) => {
   const [log, setLog] = useState<Array<string>>([]);
+  const [newlyDefeated, setNewlyDefeated] = useState<
+    PokemonWithMoveAndImage | undefined
+  >();
 
   const [pokemon1, setPokemon1] = useState<
     PokemonWithMoveAndImage | undefined
@@ -22,8 +25,10 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
   >();
 
   const [gameOver, setGameOver] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleAddPokemon(pokemon: PokemonWithMove) {
+    setLoading(true);
     const pokemonDetails = await getPokemon(pokemon.id);
     if (pokemonDetails == null) {
       throw new Error("Pokemon not found");
@@ -67,7 +72,11 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
       pokemon.name === pokemon1.name
         ? setPokemon2(undefined)
         : setPokemon1(undefined);
-
+      setNewlyDefeated(
+        pokemon.name === pokemon1.name
+          ? structuredClone({ ...pokemon2, hp: 0, attack: undefined })
+          : structuredClone({ ...pokemon1, hp: 0, attack: undefined })
+      );
       setGameOver(true);
     }
   }
@@ -89,6 +98,9 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
             <Card pokemon={pokemon1} attack={handleAttackClick} />
             <Card pokemon={pokemon2} attack={handleAttackClick} />
           </div>
+          <div className="rotate-90 inline-block">
+            <Card hidePlaceholder pokemon={newlyDefeated} />
+          </div>
         </>
         <ul className="bg-white p-4 mt-4 mb-4">
           {log.map((el) => (
@@ -100,7 +112,7 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
         {pokemen.map((el) => {
           return (
             <button key={el.id} onClick={() => handleAddPokemon(el)}>
-              <Card pokemon={el} attack={handleAttackClick} />
+              <Card pokemon={el} />
             </button>
           );
         })}

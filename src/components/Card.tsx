@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { Button } from "./Button";
 import { Move } from "@prisma/client";
 import {
   PokemonWithMove,
@@ -10,6 +9,7 @@ import {
 
 interface CardProps {
   pokemon?: PokemonWithMoveAndImage | PokemonWithMove;
+  hidePlaceholder?: boolean;
   attack?: (pokemon: PokemonWithMove, move: Move) => void;
 }
 
@@ -37,29 +37,32 @@ const Moves = ({
   if (!active) return null;
   return (
     <>
-      {pokemon.moves.map((move, index) => {
-        return (
+      {pokemon.moves.map((move) => {
+        return typeof attack === "function" ? (
           <button
-            key={index}
-            onClick={() =>
-              typeof attack === "function" ? attack(pokemon, move) : null
-            }
+            key={move.id}
+            className="hover:bg-slate-200"
+            onClick={() => attack(pokemon, move)}
           >
             {move.name} ({move.power} - {move.successRate})
           </button>
+        ) : (
+          <div key={move.id}>
+            {move.name} ({move.power} - {move.successRate})
+          </div>
         );
       })}
     </>
   );
 };
 
-export const Card = ({ pokemon, attack }: CardProps) => {
+export const Card = ({ pokemon, attack, hidePlaceholder }: CardProps) => {
   if (pokemon === undefined) {
-    return <PlaceHolder />; // TODO maybe placeholder?
+    return hidePlaceholder ? null : <PlaceHolder />; // TODO maybe placeholder?
   }
 
   return (
-    <div className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block ">
+    <div className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block focus:ring focus:ring-violet-300 hover:ring">
       <div className="bg-white h-60">
         <div className="flex justify-between text-[10px] pr-1 pl-1">
           <div>{pokemon.name}</div>
