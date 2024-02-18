@@ -25,10 +25,10 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
   >();
 
   const [gameOver, setGameOver] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [leftAttacking, setLeftAttacking] = useState(false);
+  const [rightAttacking, setRightAttacking] = useState(false);
 
   async function handleAddPokemon(pokemon: PokemonWithMove) {
-    setLoading(true);
     const pokemonDetails = await getPokemon(pokemon.id);
     if (pokemonDetails == null) {
       throw new Error("Pokemon not found");
@@ -38,6 +38,30 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
     } else {
       setPokemon2(pokemonDetails);
     }
+  }
+
+  function handleAttackClickLeftAnimation(
+    pokemon: PokemonWithMove,
+    move: Move
+  ) {
+    setLeftAttacking(true);
+
+    setTimeout(() => {
+      handleAttackClick(pokemon, move);
+      setLeftAttacking(false);
+    }, 500);
+  }
+
+  function handleAttackClickRightAnimation(
+    pokemon: PokemonWithMove,
+    move: Move
+  ) {
+    setRightAttacking(true);
+
+    setTimeout(() => {
+      handleAttackClick(pokemon, move);
+      setRightAttacking(false);
+    }, 1000);
   }
 
   function handleAttackClick(pokemon: PokemonWithMove, move: Move) {
@@ -95,8 +119,16 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
             {pokemon1?.name} VS {pokemon2?.name}
           </h1>
           <div className="flex justify-center bg-white gap-4 p-4">
-            <Card pokemon={pokemon1} attack={handleAttackClick} />
-            <Card pokemon={pokemon2} attack={handleAttackClick} />
+            <Card
+              fightAnimationLeft={leftAttacking}
+              pokemon={pokemon1}
+              attack={handleAttackClickLeftAnimation}
+            />
+            <Card
+              fightAnimationRight={rightAttacking}
+              pokemon={pokemon2}
+              attack={handleAttackClickRightAnimation}
+            />
           </div>
           <div className="rotate-90 inline-block">
             <Card hidePlaceholder pokemon={newlyDefeated} />

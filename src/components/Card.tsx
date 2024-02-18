@@ -6,11 +6,15 @@ import {
   PokemonWithMoveAndImage,
   pokemonHasImage,
 } from "./types";
+import React from "react";
+import { motion } from "framer-motion";
 
 interface CardProps {
   pokemon?: PokemonWithMoveAndImage | PokemonWithMove;
   hidePlaceholder?: boolean;
   attack?: (pokemon: PokemonWithMove, move: Move) => void;
+  fightAnimationRight?: boolean;
+  fightAnimationLeft?: boolean;
 }
 
 const EmptyMoveSkeleton = ({ active }: { active: boolean }) => {
@@ -56,13 +60,29 @@ const Moves = ({
   );
 };
 
-export const Card = ({ pokemon, attack, hidePlaceholder }: CardProps) => {
+export const Card = ({
+  pokemon,
+  attack,
+  hidePlaceholder,
+  fightAnimationLeft,
+  fightAnimationRight,
+}: CardProps) => {
   if (pokemon === undefined) {
     return hidePlaceholder ? null : <PlaceHolder />; // TODO maybe placeholder?
   }
 
   return (
-    <div className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block focus:ring focus:ring-violet-300 hover:ring">
+    <motion.div
+      whileHover={{ scale: 1.1 }}
+      animate={{
+        rotate: fightAnimationLeft
+          ? [0, 30, 0, 0]
+          : fightAnimationRight
+          ? [0, -30, 0, 0]
+          : 0,
+      }}
+      className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block focus:ring focus:ring-violet-300 hover:ring"
+    >
       <div className="bg-white h-60">
         <div className="flex justify-between text-[10px] pr-1 pl-1">
           <div>{pokemon.name}</div>
@@ -107,6 +127,6 @@ export const Card = ({ pokemon, attack, hidePlaceholder }: CardProps) => {
       <div className="text-center text-[5px] w-full">
         @ 2022 Pokemon / Nintendo Creates / GAME FREAK
       </div>
-    </div>
+    </motion.div>
   );
 };
