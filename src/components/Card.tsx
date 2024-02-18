@@ -37,7 +37,7 @@ const Moves = ({
   if (!active) return null;
   return (
     <>
-      {pokemon.moves.map((move) => {
+      {pokemon.moves?.map((move) => {
         return typeof attack === "function" ? (
           <button
             key={move.id}
@@ -94,7 +94,7 @@ export const Card = ({ pokemon, attack, hidePlaceholder }: CardProps) => {
             active={pokemon.moves === undefined || pokemon.moves.length === 0}
           />
           <Moves
-            active={pokemon.moves?.length > 0}
+            active={(pokemon.moves?.length ?? 0) > 0}
             pokemon={pokemon}
             attack={attack}
           />
