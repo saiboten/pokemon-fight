@@ -5,40 +5,37 @@ import { Card } from "./Card";
 import { Move } from "@prisma/client";
 import { PokemonWithMove, PokemonWithMoveAndImage } from "./types";
 import { Spacer } from "./Spacer";
+import { Button } from "./Button";
 
-interface Props {
-  pokemen: Array<PokemonWithMove>;
-  getPokemon: (id: number) => Promise<PokemonWithMoveAndImage | null>;
+interface FightProps {
+  initialPokemonLeft?: PokemonWithMoveAndImage;
+  initialPokemonRight?: PokemonWithMoveAndImage;
+  fightOver: (
+    winner: PokemonWithMoveAndImage,
+    loser: PokemonWithMoveAndImage
+  ) => void;
 }
 
-export const Arena = ({ pokemen, getPokemon }: Props) => {
+export const Fight = ({
+  initialPokemonLeft,
+  initialPokemonRight,
+  fightOver,
+}: FightProps) => {
   const [log, setLog] = useState<Array<string>>([]);
-  const [newlyDefeated, setNewlyDefeated] = useState<
-    PokemonWithMoveAndImage | undefined
-  >();
 
-  const [pokemon1, setPokemon1] = useState<
-    PokemonWithMoveAndImage | undefined
-  >();
-  const [pokemon2, setPokemon2] = useState<
-    PokemonWithMoveAndImage | undefined
-  >();
-
-  const [gameOver, setGameOver] = useState(false);
   const [leftAttacking, setLeftAttacking] = useState(false);
   const [rightAttacking, setRightAttacking] = useState(false);
 
-  async function handleAddPokemon(pokemon: PokemonWithMove) {
-    const pokemonDetails = await getPokemon(pokemon.id);
-    if (pokemonDetails == null) {
-      throw new Error("Pokemon not found");
-    }
-    if (pokemon1 === undefined) {
-      setPokemon1(pokemonDetails);
-    } else {
-      setPokemon2(pokemonDetails);
-    }
-  }
+  const [pokemonLeft, setPokemonLeft] = useState<
+    PokemonWithMoveAndImage | undefined
+  >(initialPokemonLeft);
+  const [pokemonRight, setPokemonRight] = useState<
+    PokemonWithMoveAndImage | undefined
+  >(initialPokemonRight);
+
+  // if (!pokemonLeft || !pokemonRight) {
+  //   return null;
+  // }
 
   function handleAttackClickLeftAnimation(
     pokemon: PokemonWithMove,
@@ -65,10 +62,12 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
   }
 
   function handleAttackClick(pokemon: PokemonWithMove, move: Move) {
-    if (pokemon1 === undefined || pokemon2 === undefined) {
+    if (pokemonLeft === undefined || pokemonRight === undefined) {
       throw new Error("Missing pokemon");
     }
-    var selectedPokemon = pokemon.name === pokemon1.name ? pokemon2 : pokemon1;
+
+    var selectedPokemon =
+      pokemon.name === pokemonLeft.name ? pokemonRight : pokemonLeft;
 
     const damage = Math.min(
       selectedPokemon.hp,
@@ -82,32 +81,162 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
       `${pokemon.name} (${pokemon.hp}): ${damage} skade på ${selectedPokemon.name} (${newHealth})`,
     ]);
 
-    pokemon.name === pokemon1.name
-      ? setPokemon2({
-          ...pokemon2,
+    pokemon.name === pokemonLeft.name
+      ? setPokemonRight({
+          ...pokemonRight,
           hp: newHealth,
         })
-      : setPokemon1({
-          ...pokemon1,
+      : setPokemonLeft({
+          ...pokemonLeft,
           hp: newHealth,
         });
 
-    if (newHealth <= 0) {
-      pokemon.name === pokemon1.name
-        ? setPokemon2(undefined)
-        : setPokemon1(undefined);
-      setNewlyDefeated(
-        pokemon.name === pokemon1.name
-          ? structuredClone({ ...pokemon2, hp: 0, attack: undefined })
-          : structuredClone({ ...pokemon1, hp: 0, attack: undefined })
-      );
-      setGameOver(true);
+    if (newHealth === 0) {
+      if (pokemon.name === pokemonLeft.name) {
+        fightOver(pokemonLeft, { ...pokemonRight, hp: 0 });
+      } else {
+        fightOver(pokemonRight, { ...pokemonLeft, hp: 0 });
+      }
+    }
+  }
+  return (
+    <div className="flex justify-center bg-white gap-4 p-4">
+      <Card
+        fightAnimationLeft={leftAttacking}
+        pokemon={pokemonLeft}
+        attack={handleAttackClickLeftAnimation}
+      />
+      <Card
+        fightAnimationRight={rightAttacking}
+        pokemon={pokemonRight}
+        attack={handleAttackClickRightAnimation}
+      />
+      <ul className="bg-white p-4 mt-4 mb-4">
+        {log.map((el) => (
+          <li key={el}>{el}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+interface Props {
+  pokemen: Array<PokemonWithMove>;
+  getPokemon: (id: number) => Promise<PokemonWithMoveAndImage | null>;
+}
+
+interface SelectFightersProps {
+  active: boolean;
+  pokemen: PokemonWithMove[];
+  handleAddPokemon: (selected: PokemonWithMove) => void;
+  handleStartFight: () => void;
+  pokemonLeft?: PokemonWithMoveAndImage;
+  pokemonRight?: PokemonWithMoveAndImage;
+}
+
+const SelectFighters = ({
+  active,
+  pokemen,
+  handleAddPokemon,
+  handleStartFight,
+  pokemonLeft,
+  pokemonRight,
+}: SelectFightersProps) => {
+  if (!active) return null;
+
+  return (
+    <div>
+      <div>
+        <Card pokemon={pokemonLeft} />
+        <Card pokemon={pokemonRight} />
+
+        <Button
+          type="button"
+          onClick={handleStartFight}
+          disabled={pokemonLeft === undefined || pokemonRight === undefined}
+        >
+          Start
+        </Button>
+      </div>
+      <div className="flex gap-1 flex-wrap basis-1/2 justify-center">
+        {pokemen.map((el) => {
+          return (
+            <button key={el.id} onClick={() => handleAddPokemon(el)}>
+              <Card pokemon={el} />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const FightOver = ({
+  active,
+  winner,
+  loser,
+  newMatch,
+}: {
+  active: boolean;
+  winner?: PokemonWithMoveAndImage;
+  loser?: PokemonWithMoveAndImage;
+  newMatch: () => void;
+}) => {
+  if (!active) return null;
+
+  return (
+    <>
+      <h1>Vinner: </h1>
+      <Card hidePlaceholder pokemon={winner} />
+
+      <h1>Taper:</h1>
+      <div className="rotate-90 inline-block">
+        <Card hidePlaceholder pokemon={loser} />
+      </div>
+      <Button onClick={newMatch}>Ny kamp</Button>
+    </>
+  );
+};
+
+export const Arena = ({ pokemen, getPokemon }: Props) => {
+  const [winner, setWinner] = useState<PokemonWithMoveAndImage | undefined>();
+  const [loser, setLoser] = useState<PokemonWithMoveAndImage | undefined>();
+
+  const [state, setState] = useState<
+    "selectFighters" | "fighting" | "fightOver"
+  >("selectFighters");
+
+  const [pokemon1, setPokemon1] = useState<
+    PokemonWithMoveAndImage | undefined
+  >();
+  const [pokemon2, setPokemon2] = useState<
+    PokemonWithMoveAndImage | undefined
+  >();
+
+  async function handleAddPokemon(pokemon: PokemonWithMove) {
+    const pokemonDetails = await getPokemon(pokemon.id);
+    if (pokemonDetails == null) {
+      throw new Error("Pokemon not found");
+    }
+    if (pokemon1 === undefined) {
+      setPokemon1(pokemonDetails);
+    } else {
+      setPokemon2(pokemonDetails);
     }
   }
 
-  function reset() {
-    setGameOver(false);
-    setLog([]);
+  function handleStartFight() {
+    setState("fighting");
+  }
+
+  function handleFightOver(
+    winner: PokemonWithMoveAndImage,
+    loser: PokemonWithMoveAndImage
+  ) {
+    console.log(winner, loser);
+    setWinner(winner);
+    setLoser(loser);
+    setState("fightOver");
   }
 
   return (
@@ -118,36 +247,30 @@ export const Arena = ({ pokemen, getPokemon }: Props) => {
           <h1>
             {pokemon1?.name} VS {pokemon2?.name}
           </h1>
-          <div className="flex justify-center bg-white gap-4 p-4">
-            <Card
-              fightAnimationLeft={leftAttacking}
-              pokemon={pokemon1}
-              attack={handleAttackClickLeftAnimation}
+          {state === "fighting" ? (
+            <Fight
+              fightOver={handleFightOver}
+              initialPokemonLeft={pokemon1}
+              initialPokemonRight={pokemon2}
             />
-            <Card
-              fightAnimationRight={rightAttacking}
-              pokemon={pokemon2}
-              attack={handleAttackClickRightAnimation}
-            />
-          </div>
-          <div className="rotate-90 inline-block">
-            <Card hidePlaceholder pokemon={newlyDefeated} />
-          </div>
+          ) : null}
+
+          <SelectFighters
+            pokemonLeft={pokemon1}
+            pokemonRight={pokemon2}
+            active={state === "selectFighters"}
+            handleAddPokemon={handleAddPokemon}
+            pokemen={pokemen}
+            handleStartFight={handleStartFight}
+          />
+
+          <FightOver
+            newMatch={() => setState("selectFighters")}
+            active={state === "fightOver"}
+            winner={winner}
+            loser={loser}
+          />
         </>
-        <ul className="bg-white p-4 mt-4 mb-4">
-          {log.map((el) => (
-            <li key={el}>{el}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="flex gap-1 flex-wrap basis-1/2 justify-center">
-        {pokemen.map((el) => {
-          return (
-            <button key={el.id} onClick={() => handleAddPokemon(el)}>
-              <Card pokemon={el} />
-            </button>
-          );
-        })}
       </div>
     </div>
   );
