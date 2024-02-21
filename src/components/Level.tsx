@@ -17,12 +17,17 @@ export const Level = ({
 }: Props) => {
   const [fightIndex, setFightIndex] = useState(0);
   const [currentAdversary, setCurrentAdversary] = useState(adversaries[0]);
+  const [currentPokemon, setCurrentPokemon] = useState(pokemon[0]);
 
   function handleFightOver(
     winner: PokemonWithMoveAndImage,
     loser: PokemonWithMoveAndImage
   ) {
-    console.log("winner", winner);
+    if (winner.name === currentPokemon.name) {
+      return fightOver(winner);
+    } else {
+      return fightOver(loser);
+    }
   }
 
   return (
@@ -30,7 +35,7 @@ export const Level = ({
       <h1>{levelName}</h1>
       <Fight
         ai
-        initialPokemonLeft={pokemon[0]}
+        initialPokemonLeft={currentPokemon}
         initialPokemonRight={currentAdversary}
         fightOver={handleFightOver}
       />
