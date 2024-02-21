@@ -5,6 +5,10 @@ export type PokemonWithMoveAndImage = Pokemon & { moves?: Move[] } & {
   image: { image: string } | null;
 };
 
+export type PokemonNoId = Exclude<Pokemon, "id"> & { moves?: Move[] } & {
+  image: { image: string } | null;
+};
+
 export function pokemonHasImage(
   pokemon: PokemonWithMove | PokemonWithMoveAndImage
 ): pokemon is PokemonWithMoveAndImage {

@@ -5,6 +5,7 @@ import { Move } from "@prisma/client";
 import { Card } from "./Card";
 
 interface FightProps {
+  ai?: boolean;
   initialPokemonLeft?: PokemonWithMoveAndImage;
   initialPokemonRight?: PokemonWithMoveAndImage;
   fightOver: (
@@ -17,6 +18,7 @@ export const Fight = ({
   initialPokemonLeft,
   initialPokemonRight,
   fightOver,
+  ai,
 }: FightProps) => {
   const [log, setLog] = useState<Array<string>>([]);
 
@@ -44,6 +46,22 @@ export const Fight = ({
       handleAttackClick(pokemon, move);
       setLeftAttacking(false);
     }, 500);
+
+    if (ai) {
+      if (pokemonRight === undefined || pokemonRight?.moves === undefined) {
+        throw new Error("No right pokemon?! And AI? Error");
+      }
+
+      const move = pokemonRight.moves?.[0];
+
+      if (move === undefined) {
+        throw new Error("No move..");
+      }
+
+      setTimeout(() => {
+        handleAttackClickRightAnimation(pokemonRight, move);
+      }, 1500);
+    }
   }
 
   function handleAttackClickRightAnimation(
@@ -107,7 +125,7 @@ export const Fight = ({
         <Card
           fightAnimationRight={rightAttacking}
           pokemon={pokemonRight}
-          attack={handleAttackClickRightAnimation}
+          attack={ai ? undefined : handleAttackClickRightAnimation}
         />
       </div>
       <ul className="bg-white p-4 mt-4 mb-4">

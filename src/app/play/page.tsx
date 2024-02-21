@@ -3,7 +3,7 @@ import { prisma } from "@/storage/prisma";
 
 export default async function Page() {
   async function loadPokemon() {
-    const firstPokemon = prisma.pokemon.findFirst({
+    const firstPokemon = prisma.pokemon.findMany({
       include: {
         image: true,
         moves: true,
@@ -16,12 +16,12 @@ export default async function Page() {
     return firstPokemon;
   }
 
-  const pokemon = await loadPokemon();
+  const pokemen = await loadPokemon();
 
   return (
     <div>
       <h1>Nå skal vi ut på eventyr!</h1>
-      <Game selectedPokemon={pokemon} />
+      <Game selectedPokemon={pokemen[0]} pokemen={pokemen} />
     </div>
   );
 }
