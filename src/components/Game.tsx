@@ -24,60 +24,24 @@ export const Levels = ({
     }
   }
 
+  const weedle = pokemen.find((el) => el.id === 18);
+  const kakuna = pokemen.find((el) => el.id === 19);
+
+  if (weedle === undefined || kakuna === undefined) {
+    throw new Error("Level 1 pokemen not found");
+  }
+
   if (currentLevel === 0) {
     return (
       <Level
         fightOver={handleLevelOver}
         levelName="Level 1"
         pokemon={[pokemon]}
-        adversaries={[
-          {
-            hp: 500,
-            id: -1,
-            image: { image: "" },
-            name: "Weedle",
-            moves: [
-              {
-                power: 10,
-                successRate: 1,
-                id: -1,
-                name: "Pust",
-                pokemonId: -1,
-              },
-            ],
-          },
-        ]}
+        adversaries={[weedle, kakuna]}
       ></Level>
     );
   }
 
-  if (currentLevel === 1) {
-    return (
-      <Level
-        key={currentLevel}
-        fightOver={handleLevelOver}
-        levelName="Level 2"
-        pokemon={[pokemon]}
-        adversaries={[
-          {
-            hp: 1000,
-            id: -1,
-            image: { image: "" },
-            name: "Peedle",
-            moves: [
-              {
-                power: 5,
-                successRate: 1,
-                id: -1,
-                name: "Pes",
-                pokemonId: -1,
-              },
-            ],
-          },
-        ]}
-      ></Level>
-    );
-  }
   return null;
 };
 
@@ -94,7 +58,7 @@ export const Game = ({ pokemen, selectedPokemon }: Props) => {
 
   function handleLevelWon() {
     setLevel(level + 1);
-    if (level + 1 === 2) {
+    if (level + 1 === 1) {
       setGameWon(true);
     }
   }

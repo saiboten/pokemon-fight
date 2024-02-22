@@ -19,12 +19,20 @@ export const Level = ({
   const [currentAdversary, setCurrentAdversary] = useState(adversaries[0]);
   const [currentPokemon, setCurrentPokemon] = useState(pokemon[0]);
 
+  console.log(currentAdversary);
+
   function handleFightOver(
     winner: PokemonWithMoveAndImage,
     loser: PokemonWithMoveAndImage
   ) {
     if (winner.name === currentPokemon.name) {
-      return fightOver(winner);
+      if (adversaries.length - 1 === fightIndex) {
+        return fightOver(winner);
+      } else {
+        const newFightIndex = fightIndex + 1;
+        setFightIndex(newFightIndex);
+        setCurrentAdversary(adversaries[newFightIndex]);
+      }
     } else {
       return fightOver(loser);
     }
@@ -34,6 +42,7 @@ export const Level = ({
     <div>
       <h1>{levelName}</h1>
       <Fight
+        key={fightIndex}
         ai
         initialPokemonLeft={currentPokemon}
         initialPokemonRight={currentAdversary}
