@@ -20,6 +20,7 @@ export const Fight = ({
   fightOver,
   ai,
 }: FightProps) => {
+  // const [state, setState] = useState<"attackAnimation" | "idle">("idle");
   const [log, setLog] = useState<Array<string>>([]);
 
   const [leftAttacking, setLeftAttacking] = useState(false);
@@ -36,15 +37,22 @@ export const Fight = ({
   //   return null;
   // }
 
+  const attackOngoing = leftAttacking || rightAttacking;
+
   function handleAttackClickLeftAnimation(
     pokemon: PokemonWithMove,
     move: Move
   ) {
+    if (attackOngoing) {
+      return;
+    }
     setLeftAttacking(true);
 
     setTimeout(() => {
       handleAttackClick(pokemon, move);
-      setLeftAttacking(false);
+      if (!ai) {
+        setLeftAttacking(false);
+      }
     }, 500);
 
     if (ai) {
@@ -59,6 +67,7 @@ export const Fight = ({
       }
 
       setTimeout(() => {
+        setLeftAttacking(false);
         handleAttackClickRightAnimation(pokemonRight, move);
       }, 1500);
     }
@@ -68,6 +77,9 @@ export const Fight = ({
     pokemon: PokemonWithMove,
     move: Move
   ) {
+    if (attackOngoing) {
+      return;
+    }
     setRightAttacking(true);
 
     setTimeout(() => {
@@ -120,7 +132,7 @@ export const Fight = ({
         <Card
           fightAnimationLeft={leftAttacking}
           pokemon={pokemonLeft}
-          attack={handleAttackClickLeftAnimation}
+          attack={attackOngoing ? undefined : handleAttackClickLeftAnimation}
         />
         <Card
           fightAnimationRight={rightAttacking}
