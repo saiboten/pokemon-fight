@@ -30,7 +30,7 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className="text-center text-2xl">Pokemon-kamp</h1>
+      <h1 className="text-center text-2xl mt-4">Pokemon-kamp</h1>
       <Arena pokemen={pokemen} getPokemon={getPokemon} />
     </>
   );

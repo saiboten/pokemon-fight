@@ -8,8 +8,11 @@ export function LinkButton({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-4 rounded bg-white p-4 inline-block">
-      <Link href={href}>{children}</Link>
-    </div>
+    <Link
+      className="border-4 border-green-200 rounded-lg bg-green-100 p-4 inline-block cursor-pointer"
+      href={href}
+    >
+      {children}
+    </Link>
   );
 }

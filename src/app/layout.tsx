@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Spacer />
-        <div className="pl-2 pr-2 flex gap-4 flex-wrap">
+        <div className="pl-2 pr-2 flex gap-4 flex-wrap justify-center">
           <LinkButton href="/library">Se alle pokemon</LinkButton>
           <LinkButton href="/addpokemon">Legg til pokemon</LinkButton>
           <LinkButton href="/">Til kamparenaen</LinkButton>

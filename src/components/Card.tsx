@@ -45,7 +45,7 @@ const Moves = ({
         return typeof attack === "function" ? (
           <button
             key={move.id}
-            className="hover:bg-slate-200"
+            className="hover:bg-slate-200 text-left border p-2 rounded-sm border-zinc-100"
             onClick={() => attack(pokemon, move)}
           >
             {move.name} ({move.power} - {move.successRate})
@@ -75,6 +75,11 @@ export const Card = ({
     <motion.div
       whileHover={{ scale: 1.1 }}
       animate={{
+        x: fightAnimationLeft
+          ? [0, 100, 0, 0]
+          : fightAnimationRight
+          ? [0, -100, 0, 0]
+          : 0,
         rotate: fightAnimationLeft
           ? [0, 30, 0, 0]
           : fightAnimationRight

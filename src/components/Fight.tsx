@@ -114,13 +114,17 @@ export const Fight = ({
     }
   }
   return (
-    <div>
-      <div className="flex justify-center bg-white gap-4 p-4">
+    <div className="flex justify-center gap-4 p-4 rounded-xl bg-yellow-50 max-w-[35rem] m-auto">
+      <div className="flex justify-center flex-col items-center gap-2">
+        <div>Din pokemon</div>
         <Card
           fightAnimationLeft={leftAttacking}
           pokemon={pokemonLeft}
           attack={attackOngoing ? undefined : handleAttackClickLeftAnimation}
         />
+      </div>
+      <div className="flex justify-center flex-col items-center gap-2">
+        <div>Motstander</div>
         <Card
           fightAnimationRight={rightAttacking}
           pokemon={pokemonRight}
