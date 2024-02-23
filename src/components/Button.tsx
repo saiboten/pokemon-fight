@@ -13,7 +13,7 @@ export const Button = ({
     <button
       disabled={disabled}
       type={type}
-      className="p-2 focus:ring border-2 rounded border-solid hover:bg-slate-50"
+      className="p-2 focus:ring border-4 rounded-xl border-solid hover:bg-slate-50 bg-lime-100"
       onClick={onClick}
     >
       {children}

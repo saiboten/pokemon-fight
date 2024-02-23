@@ -20,9 +20,6 @@ export const Fight = ({
   fightOver,
   ai,
 }: FightProps) => {
-  // const [state, setState] = useState<"attackAnimation" | "idle">("idle");
-  const [log, setLog] = useState<Array<string>>([]);
-
   const [leftAttacking, setLeftAttacking] = useState(false);
   const [rightAttacking, setRightAttacking] = useState(false);
 
@@ -32,11 +29,6 @@ export const Fight = ({
   const [pokemonRight, setPokemonRight] = useState<
     PokemonWithMoveAndImage | undefined
   >(initialPokemonRight);
-
-  // if (!pokemonLeft || !pokemonRight) {
-  //   return null;
-  // }
-
   const attackOngoing = leftAttacking || rightAttacking;
 
   function handleAttackClickLeftAnimation(
@@ -103,11 +95,6 @@ export const Fight = ({
 
     const newHealth = Math.max(0, selectedPokemon.hp - damage);
 
-    setLog([
-      ...log,
-      `${pokemon.name} (${pokemon.hp}): ${damage} skade på ${selectedPokemon.name} (${newHealth})`,
-    ]);
-
     pokemon.name === pokemonLeft.name
       ? setPokemonRight({
           ...pokemonRight,
@@ -140,11 +127,6 @@ export const Fight = ({
           attack={ai ? undefined : handleAttackClickRightAnimation}
         />
       </div>
-      <ul className="bg-white p-4 mt-4 mb-4">
-        {log.map((el) => (
-          <li key={el}>{el}</li>
-        ))}
-      </ul>
     </div>
   );
 };

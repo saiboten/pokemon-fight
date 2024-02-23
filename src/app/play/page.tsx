@@ -3,25 +3,25 @@ import { prisma } from "@/storage/prisma";
 
 export default async function Page() {
   async function loadPokemon() {
-    const firstPokemon = prisma.pokemon.findMany({
+    const allPokemon = prisma.pokemon.findMany({
       include: {
         image: true,
         moves: true,
       },
     });
 
-    if (!firstPokemon) {
+    if (!allPokemon) {
       throw new Error("No pokemon found");
     }
-    return firstPokemon;
+    return allPokemon;
   }
 
   const pokemen = await loadPokemon();
 
-  return (
-    <div>
-      <h1>Nå skal vi ut på eventyr!</h1>
-      <Game selectedPokemon={pokemen[0]} pokemen={pokemen} />
-    </div>
-  );
+  const pokemon = pokemen.find((el) => el.id === 3);
+  if (!pokemon) {
+    throw new Error("Balla not found");
+  }
+
+  return <Game selectedPokemon={pokemon} pokemen={pokemen} />;
 }
