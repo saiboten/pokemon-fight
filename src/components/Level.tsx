@@ -39,7 +39,7 @@ export const Level = ({
 
   return (
     <div>
-      <div className="text-center mt-4 mb-4 text-xl rounded-full w-32 h-32 bg-teal-200 border-teal-400 border-8 flex justify-center items-center m-auto">
+      <div className="text-center mt-4 mb-4 text-sm rounded-full w-16 h-16 bg-teal-200 border-teal-400 border-4 flex justify-center items-center m-auto">
         {levelName}
       </div>
       <Fight
