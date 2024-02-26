@@ -18,6 +18,7 @@ model Move {
   successRate Int
   Pokemon     Pokemon? @relation(fields: [pokemonId], references: [id])
   pokemonId   Int?
+  type        String?
 }
 
 model PokemonImage {
@@ -33,6 +34,7 @@ model Pokemon {
   hp    Int
   moves Move[]
   image PokemonImage?
+  type  String?
 }
 
 model User {

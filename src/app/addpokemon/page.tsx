@@ -19,10 +19,11 @@ export default function AddPokemonPage() {
   async function addPokey(formData: FormData) {
     "use server";
 
-    const { name, health, move, image } = {
+    const { name, health, move, image, type } = {
       name: formData.get("name"),
       health: formData.get("health"),
       move: formData.get("move"),
+      type: formData.get("type"),
       image: formData.get("image") as unknown as File,
     };
 
@@ -30,12 +31,14 @@ export default function AddPokemonPage() {
       data: {
         hp: Number(health?.toString()) ?? 0,
         name: name?.toString() ?? "unset",
+        type: type?.toString() ?? "water",
         moves: {
           create: [
             {
               name: "Angrep",
               power: Number(move?.toString()) ?? 0,
               successRate: 1,
+              type: type?.toString() ?? "water",
             },
           ],
         },
@@ -89,6 +92,15 @@ export default function AddPokemonPage() {
         </div>
         <div className="mb-4 flex gap-4 w-full">
           <span className="basis-20">Angrep: </span>
+          <input
+            className="w-full"
+            type="text"
+            autoComplete="off"
+            name="move"
+          />
+        </div>
+        <div className="mb-4 flex gap-4 w-full">
+          <span className="basis-20">Type: </span>
           <input
             className="w-full"
             type="text"

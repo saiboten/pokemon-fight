@@ -13,6 +13,7 @@ export const EditForm = ({
   editPokemon: string | ((formData: FormData) => void) | undefined;
 }) => {
   const [name, setName] = useState(pokemon.name);
+  const [type, setType] = useState(pokemon.type ?? "");
   const [hp, setHp] = useState(pokemon.hp);
   const [move, setMove] = useState(pokemon.moves?.[0].power);
 
@@ -30,6 +31,17 @@ export const EditForm = ({
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="mb-4 flex gap-4 w-full">
+        <span className="basis-20 p-1">Type: </span>
+        <input
+          className="w-full p-1"
+          type="text"
+          autoComplete="off"
+          name="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
         />
       </div>
       <div className="mb-4 flex gap-4 w-full">

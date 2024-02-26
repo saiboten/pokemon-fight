@@ -14,3 +14,5 @@ export function pokemonHasImage(
 ): pokemon is PokemonWithMoveAndImage {
   return (pokemon as PokemonWithMoveAndImage).image !== undefined;
 }
+
+export type Types = "water" | "fire" | "grass";
