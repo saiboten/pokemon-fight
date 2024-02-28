@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { PokemonNoId, PokemonWithMoveAndImage } from "./types";
+import { PokemonWithMoveAndImage } from "./types";
 import { Fight } from "./Fight";
 
 interface Props {
   levelName: string;
   pokemon: Array<PokemonWithMoveAndImage>;
-  adversaries: Array<PokemonNoId>;
+  adversaries: Array<PokemonWithMoveAndImage>;
   fightOver: (pokemen: PokemonWithMoveAndImage) => void;
 }
 

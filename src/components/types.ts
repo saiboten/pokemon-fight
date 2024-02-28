@@ -1,11 +1,17 @@
-import { Move, Pokemon } from "@prisma/client";
+import { Move, Pokemon as PokemonRaw } from "@prisma/client";
 
-export type PokemonWithMove = Pokemon & { moves?: Move[] };
-export type PokemonWithMoveAndImage = Pokemon & { moves?: Move[] } & {
+export type Types = "water" | "grass" | "fire";
+
+export type PokemonTypeCheck = {
+  type: Types;
+} & Omit<PokemonRaw, "type">;
+
+export type PokemonWithMove = PokemonRaw & { moves?: Move[] };
+export type PokemonWithMoveAndImage = PokemonRaw & { moves?: Move[] } & {
   image: { image: string } | null;
 };
 
-export type PokemonNoId = Exclude<Pokemon, "id"> & { moves?: Move[] } & {
+export type PokemonNoId = Omit<PokemonRaw, "id"> & { moves?: Move[] } & {
   image: { image: string } | null;
 };
 
@@ -14,5 +20,3 @@ export function pokemonHasImage(
 ): pokemon is PokemonWithMoveAndImage {
   return (pokemon as PokemonWithMoveAndImage).image !== undefined;
 }
-
-export type Types = "water" | "fire" | "grass";
