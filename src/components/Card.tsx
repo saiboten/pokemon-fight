@@ -4,10 +4,17 @@ import { Move } from "@prisma/client";
 import {
   PokemonWithMove,
   PokemonWithMoveAndImage,
+  Types,
   pokemonHasImage,
 } from "./types";
 import React from "react";
 import { motion } from "framer-motion";
+
+const typeToBgMap = {
+  water: "bg-blue-100",
+  fire: "bg-red-100",
+  grass: "bg-green-100",
+};
 
 interface CardProps {
   pokemon?: PokemonWithMoveAndImage | PokemonWithMove;
@@ -88,7 +95,9 @@ export const Card = ({
       }}
       className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block focus:ring focus:ring-violet-300 hover:ring"
     >
-      <div className="bg-white h-60">
+      <div
+        className={`h-60 ${typeToBgMap[(pokemon.type ?? "water") as Types]}`}
+      >
         <div className="flex justify-between text-[10px] pr-1 pl-1">
           <div>{pokemon.name}</div>
           <div className="flex items-center">

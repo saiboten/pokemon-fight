@@ -1,15 +1,21 @@
 "use client";
-
+import { ComponentProps } from "react";
 import { useFormStatus } from "react-dom";
 
-export function SubmitButton({ children }: { children: string }) {
-  const { pending } = useFormStatus();
+// TODO 2: ComponentProps
+type Props = ComponentProps<"button"> & {
+  children: string;
+};
 
+export function SubmitButton({ children, ...rest }: Props) {
+  const { pending } = useFormStatus();
   return (
     <button
+      disabled={pending}
+      aria-disabled={pending}
       className="bg-white p-4 rounded-lg border-spacing-2"
       type="submit"
-      aria-disabled={pending}
+      {...rest}
     >
       {children}
     </button>

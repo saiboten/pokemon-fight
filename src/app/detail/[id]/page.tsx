@@ -82,17 +82,19 @@ export default async function Detail({ params }: { params: { id: string } }) {
     "use server";
     console.log("storing");
 
-    const { name, health, move, moveId } = {
+    const { name, health, move, moveId, type } = {
       name: formData.get("name"),
       health: formData.get("health"),
       move: formData.get("move"),
       moveId: formData.get("moveId"),
+      type: formData.get("type"),
     };
 
     await prisma.pokemon.update({
       data: {
         name: name?.toString() ?? "",
         hp: Number(health?.toString()) ?? 0,
+        type: type?.toString() ?? "water",
       },
       where: {
         id: Number(params.id),
