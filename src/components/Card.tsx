@@ -75,15 +75,15 @@ export const Card = ({
     <motion.div
       whileHover={{ scale: 1.1 }}
       animate={{
-        x: fightAnimationLeft
-          ? [0, 100, 0, 0]
+        y: fightAnimationLeft
+          ? [0, -150, 0, 0]
           : fightAnimationRight
-          ? [0, -100, 0, 0]
+          ? [0, 150, 0, 0]
           : 0,
         rotate: fightAnimationLeft
-          ? [0, 30, 0, 0]
+          ? [0, -90, 0, 0]
           : fightAnimationRight
-          ? [0, -30, 0, 0]
+          ? [0, 90, 0, 0]
           : 0,
       }}
       className="w-44 h-64 min-w-44 border-1 rounded bg-amber-300 border-amber-300 p-2 inline-block focus:ring focus:ring-violet-300 hover:ring"
